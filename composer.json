@@ -1,0 +1,53 @@
+{
+    "name": "hydrastat/dto-hydrator",
+    "description": "Framework-agnostic DTO hydrator with Laravel, CodeIgniter, and Symfony integrations",
+    "type": "library",
+    "license": "MIT",
+    "require": {
+        "php": "^8.2",
+        "psr/container": "^2.0",
+        "psr/http-message": "^2.0"
+    },
+    "require-dev": {
+        "laravel/framework": "^10|^11",
+        "codeigniter4/framework": "^4.5",
+        "symfony/framework-bundle": "^6|^7",
+        "doctrine/annotations": "^2.0",
+        "phpunit/phpunit": "^10.5"
+    },
+    "autoload": {
+        "psr-4": {
+            "Hydrastat\\DtoHydrator\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Hydrastat\\DtoHydrator\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Hydrastat\\DtoHydrator\\Integrations\\Laravel\\ServiceProvider"
+            ],
+            "aliases": {
+                "Hydrator": "Hydrastat\\DtoHydrator\\Integrations\\Laravel\\Facade"
+            }
+        },
+        "codeigniter": {
+            "services": {
+                "hydrator": "Hydrastat\\DtoHydrator\\Integrations\\CodeIgniter\\Service"
+            }
+        },
+        "symfony": {
+            "bundles": {
+                "Hydrastat\\DtoHydrator\\Integrations\\Symfony\\Bundle": ["all"]
+            }
+        }
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}

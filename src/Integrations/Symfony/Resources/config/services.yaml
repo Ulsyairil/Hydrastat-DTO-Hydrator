@@ -1,0 +1,19 @@
+parameters:
+    hydrator.allow_private_access: true
+    hydrator.default_options:
+        groups: ['default']
+        exclude_null: false
+        skip_required: false
+
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+
+    Hydrastat\DtoHydrator\Integrations\Symfony\ValidatorIntegration:
+        arguments:
+            $symfonyValidator: '@validator'
+        tags:
+            - { name: 'hydrastat.validator' }
+
+    Hydrastat\DtoHydrator\Contracts\ValidatorInterface: '@Hydrastat\DtoHydrator\Integrations\Symfony\ValidatorIntegration'
