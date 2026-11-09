@@ -1,6 +1,6 @@
 {
     "name": "hydrastat/dto-hydrator",
-    "description": "Framework-agnostic DTO hydrator with Laravel, CodeIgniter, and Symfony integrations",
+    "description": "Framework-agnostic DTO hydrator with Laravel, CodeIgniter, Symfony, Yii 2, and CakePHP integrations",
     "type": "library",
     "license": "MIT",
     "require": {
@@ -12,6 +12,8 @@
         "laravel/framework": "^10|^11",
         "codeigniter4/framework": "^4.5",
         "symfony/framework-bundle": "^6|^7",
+        "yiisoft/yii2": "^2.0",
+        "cakephp/cakephp": "^4.5|^5.0",
         "doctrine/annotations": "^2.0",
         "phpunit/phpunit": "^10.5"
     },
@@ -25,6 +27,12 @@
             "Hydrastat\\DtoHydrator\\Tests\\": "tests/"
         }
     },
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://asset-packagist.org"
+        }
+    ],
     "extra": {
         "laravel": {
             "providers": [

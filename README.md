@@ -7,7 +7,7 @@
 [![Tests](https://img.shields.io/badge/tests-36%20passing-brightgreen.svg)](#test)
 [![External calls](https://img.shields.io/badge/external%20calls-zero-success.svg)](#why-local)
 
-Framework-agnostic DTO hydrator with Laravel, CodeIgniter, and Symfony integrations.
+Framework-agnostic DTO hydrator with Laravel, CodeIgniter, Symfony, Yii 2, and CakePHP integrations.
 
 ## Installation
 
@@ -144,6 +144,84 @@ class UserController
 }
 ```
 
+#### Yii 2
+
+```php
+// config/main.php
+return [
+    'bootstrap' => [\Hydrastat\DtoHydrator\Integrations\Yii\Bootstrap::class],
+    'params' => [
+        'hydrator' => [
+            'allowPrivateAccess' => true,
+            'defaultOptions' => ['groups' => ['default']],
+            'customValidators' => [],
+            'customCasters' => [],
+        ],
+    ],
+];
+```
+
+The bootstrap registers `HydratorInterface::class` and the `hydrator` alias in `Yii::$container`:
+
+```php
+use Hydrastat\DtoHydrator\Contracts\HydratorInterface;
+
+final class UserController extends \yii\web\Controller
+{
+    public function actionCreate(): array
+    {
+        $hydrator = \Yii::$container->get(HydratorInterface::class);
+        $dto = $hydrator->hydrateAndValidate(UserCreateDTO::class, \Yii::$app->request->post());
+
+        return $hydrator->extract($this->userService->create($dto));
+    }
+}
+```
+
+You can also build one directly with `\Hydrastat\DtoHydrator\Integrations\Yii\Service::hydrator()`.
+
+#### CakePHP
+
+```php
+// config/bootstrap.php
+use Cake\Core\Configure;
+
+Configure::write('Hydrator', [
+    'allowPrivateAccess' => true,
+    'defaultOptions' => ['groups' => ['default']],
+    'customValidators' => [],
+    'customCasters' => [],
+]);
+```
+
+```php
+use Hydrastat\DtoHydrator\Contracts\HydratorInterface;
+use Hydrastat\DtoHydrator\Integrations\CakePHP\Service;
+
+class UsersController extends AppController
+{
+    public function add()
+    {
+        $hydrator = Service::hydrator();
+        $dto = $hydrator->hydrateAndValidate(
+            UserCreateDTO::class,
+            (array) $this->request->getData()
+        );
+
+        // ...
+    }
+}
+```
+
+For dependency injection, register shared definitions in a CakePHP container:
+
+```php
+$container = new \Cake\Core\Container();
+Service::register($container);
+
+$hydrator = $container->get(HydratorInterface::class);
+```
+
 #### Framework-agnostic (standalone)
 
 ```php
@@ -207,6 +285,8 @@ date, in, regex, unique, confirmed
 ```
 
 ## Custom Casters & Validators
+
+Laravel, CodeIgniter, Yii 2, and CakePHP expose the same four settings through their own config convention: `allowPrivateAccess`, `defaultOptions`, `customValidators`, and `customCasters`. Laravel uses snake_case keys in `config/hydrator.php`; CodeIgniter uses `app/Config/Hydrator.php`, Yii 2 uses `params.hydrator`, and CakePHP uses `Configure::write('Hydrator', ...)` with the camelCase names.
 
 ```php
 // Laravel: config/hydrator.php
